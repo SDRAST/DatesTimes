@@ -78,6 +78,10 @@ Example::
 These take the forms::
   `Jhhmm+ddmm`, `Bhhmm+ddmm` and `Gddd.d+dd.d`
 
+##Classes
+
+Subclass `UTC(datetime.tzinfo)` defines UTC.
+
 ##Functions
 
 ###ISO times
@@ -88,6 +92,16 @@ Methods to convert to and from ISO times
   ISOtime2datetime(ISOtime)
 ```
 
+###UNIX Timestamp
+
+```
+  datetime_to_UnixTime(t)
+  macro_log_time_to_UnixTime(year,timestr)
+  UnixTime_to_datetime(UnixTimeStamp)
+  UnixTime_to_MPL(UnixTimeStamp)
+  MPLtime_to_UnixTime(MPLtime)
+  timestamp_to_str_with_ms(TS)
+```
 ###VSR Times
 
 To and from various VSR time formats
@@ -118,26 +132,30 @@ Various functions to convert to and from time strings
   YYYYDDD_datecode(year, midfix, doy)
 ```
 
+###Date Conversions
+```
+  calendar_date(year, doy)
+  julian_date (year, doy)
+  MJD_to_UnixTime(MJD)
+  day_of_year (year, month, day)
+```
+
 ###Miscellaneous
 
 Various useful functions
 ```
-  datetime_to_UnixTime(t)
+  day_of_week(doy, year)
+  leap_year (year)
   deg_to_IAU_str(position,format="h")
+  week_number(year,doy)
   format_now()
+  now_string()
   get_current_week()
   get_date()
+  
   logtime_to_timetuple(time_string)
-  macro_log_time_to_UnixTime(year,timestr)
   mpldate2doy(mpldate)
-  MPLtime_to_UnixTime(MPLtime)
-  now_string()
   parse_date(ses_date)
   time_int_to_decimal(time)
-  timestamp_to_str_with_ms(TS)
   timetuple_to_datetime(timetuple)
-  UnixTime_to_datetime(UnixTimeStamp)
-  UnixTime_to_MPL(UnixTimeStamp)
-  week_number(year,doy)
-  MJD_to_UnixTime(MJD)
 ```
