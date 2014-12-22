@@ -128,13 +128,13 @@ Various useful functions::
 
 import time     as T
 import datetime as DT
-from pylab import date2num, num2date, ndarray
-import logging
-
 from math import pi
-import Astronomy as A
 from sys import argv
 import re
+
+from pylab import date2num, num2date, ndarray
+
+import logging
 
 module_logger = logging.getLogger(__name__)
 
@@ -730,3 +730,24 @@ def UnixTime_to_MJD(UnixTime):
   @return: float
   """
   return 40587+UnixTime/sec_per_day
+
+def MJD(*args):
+  """
+  Returns modified Julian date from UNIX time or (year,doy) or (year,month,day)
+  """
+  if len(args) == 1:
+    # assume UNIX time stamp
+    unixtime = args[0]
+    return 40587 + unixtime/(24*60*60)
+  elif len(args) == 2:
+    # assume year and day-of-year
+    year, doy = args
+    return julian_date(year,doy) - 2400000.5
+  elif len(args) == 3:
+    # assume calendar date
+    year, month, day = args
+    doy = day_of_year(year, month, day)
+    return julian_date(year,doy) - 2400000.5
+  else:
+    raise RuntimeError, "MJD requires 1, 2, or 3 arguments"
+
