@@ -117,6 +117,7 @@ Various useful functions::
   MPLtime_to_UnixTime(MPLtime)
   now_string()
   parse_date(ses_date)
+  seconds(timedelta)
   time_int_to_decimal(time)
   timestamp_to_str_with_ms(TS)
   timetuple_to_datetime(timetuple)
@@ -750,4 +751,25 @@ def MJD(*args):
     return julian_date(year,doy) - 2400000.5
   else:
     raise RuntimeError, "MJD requires 1, 2, or 3 arguments"
+
+def seconds(timedelta, unit="sec"):
+  """
+  Computes the length of a datetime interval to specified units
+  
+  @param timedelta : difference between two datetime values
+  @type  timedelta : datetime.timedelta instance
+  
+  @param unit : "sec" or "min" or "day"
+  @type  unit : str
+  
+  @return: float
+  """
+  days = timedelta.days
+  secs = timedelta.seconds
+  if unit == "sec":
+    return days*24*3600 + secs
+  elif unit == "min":
+    return days*24*60 + secs/60.
+  else:
+    return days*24 + secs/3600.
 
