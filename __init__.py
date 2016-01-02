@@ -23,16 +23,27 @@ used in filenames are of the form::
 ISO timestamps
 --------------
 These are of the form::
-  YYYYMMDDTHHMMSS or YYYY-MM-DDTHH:MM:SS.
+  YYYYMMDDTHHMMSS or 
+  YYYY-MM-DDTHH:MM:SS.
+We've extended this to include::
+  YYYY-DDDTHH:MM(:SS) and 
+  YYYYDDDTHHMM.
 
 Python times
 ------------
 take these forms::
   datetime.datetime object
-  time.time float
-  datetime tuple
-  datetime ordinal
-  matplotlib datetime float
+     datetime.datetime(2015, 12, 19, 10, 29, 29, 198776)
+  time.time (float)
+     1450729528.987735
+  time.struct_time
+     time.struct_time(tm_year=2015, tm_mon=12, tm_mday=21,
+                      tm_hour=20, m_min=23, tm_sec=18, 
+                      tm_wday=0, tm_yday=355, tm_isdst=0)
+  datetime ordinal (int)
+     735951
+  matplotlib datetime (float)
+     735953.5172106482
 
 UNIX (System) Time
 ------------------
@@ -297,13 +308,17 @@ def ISOtime2datetime(ISOtime):
       if re.search(":",ISOtime):
         if re.search("-",ISOtime):
           if ISOtime.index('T') == 10:
-            # case YYYY-MM-DDTHH:MM:SS
-            return DT.datetime.strptime(ISOtime,'%Y-%m-%dT%H:%M:%S')
+            if len(ISOtime) == 17:
+              # case YYYY-MM-DDTHH:MM:SS
+              return DT.datetime.strptime(ISOtime,'%Y-%m-%dT%H:%M:%S')
+            elif len(ISOtime) == 14:
+              # case YYYY-MM-DDTHH:MM
+              return DT.datetime.strptime(ISOtime,'%Y-%m-%dT%H:%M')
           elif ISOtime.index('T') == 8:
             # case YYYY-DDDTHH:MM(:SS)
             if len(ISOtime) == 14:
               return DT.datetime.strptime(ISOtime,'%Y-%jT%H:%M')
-            elif len(ISOtime) == 16:
+            elif len(ISOtime) == 17:
               return DT.datetime.strptime(ISOtime,'%Y-%jT%H:%M:%S')
             else:
               return None
@@ -335,7 +350,7 @@ def timestamp_to_str_with_ms(TS):
 
 def UnixTime_to_datetime(UnixTimeStamp):
   """Converts a UNIX time stamp to a Python datetime object"""
-  return T.datetime.fromtimestamp(UnixTimeStamp)
+  return DT.datetime.fromtimestamp(UnixTimeStamp, tz=UTC())
 
 def datetime_to_UnixTime(t):
   """
@@ -352,18 +367,20 @@ def datetime_to_UnixTime(t):
   return unixtime
 
 def timetuple_to_datetime(timetuple):
-  """Converts a timetuple (y,mo,d,h,mi,s) to a datetime object.
+  """
+  Converts a timetuple (y,mo,d,h,mi,s) to a datetime object.
+  
   To convert a datetime object to a timetuple, simply invoke the object's
-  timetuple() method."""
-  if len(timetuple < 6):
-    return DT.datetime(*timetuple[:-1])
+  timetuple() method.
+  """
+  if len(timetuple) < 6:
+    return DT.datetime(*timetuple)
   else:
     return DT.datetime(*timetuple[:6])
 
 def UnixTime_to_MPL(UnixTime):
   """
-  onverts a UNIX time stamp (seconds since the epoch) to
-  matplotlib date/time values.
+  Converts a UNIX time stamp (seconds since the epoch) to matplotlib date/time.
   """
   # date2num works on datetime objects
   if type(UnixTime) == list or type(UnixTime) == ndarray:
