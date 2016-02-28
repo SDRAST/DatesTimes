@@ -308,10 +308,10 @@ def ISOtime2datetime(ISOtime):
       if re.search(":",ISOtime):
         if re.search("-",ISOtime):
           if ISOtime.index('T') == 10:
-            if len(ISOtime) == 17:
+            if len(ISOtime) == 19:
               # case YYYY-MM-DDTHH:MM:SS
               return DT.datetime.strptime(ISOtime,'%Y-%m-%dT%H:%M:%S')
-            elif len(ISOtime) == 14:
+            elif len(ISOtime) == 16:
               # case YYYY-MM-DDTHH:MM
               return DT.datetime.strptime(ISOtime,'%Y-%m-%dT%H:%M')
           elif ISOtime.index('T') == 8:
