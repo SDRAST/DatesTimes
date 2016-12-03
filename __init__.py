@@ -296,8 +296,12 @@ def ISOtime2datetime(ISOtime):
     """
     Converts an ISO string to a datetime object
     
-    Acceptable input formats are YYYY-MM-DDTHH:MM:SS, YYYY-DDDTHH:MM(:SS),
-    YYYYMMDDTHHMMSS, YYYYDDDTHHMM and YYYY-MM-DD HH:MM:SS
+    Acceptable input formats are::
+      YYYY-MM-DDTHH:MM:SS,
+      YYYY-DDDTHH:MM(:SS),
+      YYYYMMDDTHHMMSS,
+      YYYYDDDTHHMM and
+      YYYY-MM-DD HH:MM:SS
 
     @param ISOtime : time in one of the above formats
     @type  ISOtime : str
@@ -330,9 +334,9 @@ def ISOtime2datetime(ISOtime):
         if len(ISOtime) == 12:
           return DT.datetime.strptime(ISOtime,'%Y%jT%H%M')
         elif len(ISOtime) == 14:
-          return DT.datetime.strptime(ISOtime,'%Y%jT%H%M%S')
+          return DT.datetime.strptime(ISOtime,'%Y%jT%H%M%S')          
         else:
-          return None
+          return DT.datetime.strptime(ISOtime,'%Y%jT%H%M%S.%f')
       else:
         return None
     else:
