@@ -340,8 +340,12 @@ def ISOtime2datetime(ISOtime):
       else:
         return None
     else:
-      # YYYY-MM-DD HH:MM:SS
-      return DT.datetime.strptime(ISOtime, "%Y-%m-%d %H:%M:%S")
+      if re.search('\.',ISOtime):
+        # YYYY-MM-DD HH:MM:SS.sss
+        return DT.datetime.strptime(ISOtime, "%Y-%m-%d %H:%M:%S.%f")
+      else:
+        # YYYY-MM-DD HH:MM:SS
+        return DT.datetime.strptime(ISOtime, "%Y-%m-%d %H:%M:%S")
 
 def timestamp_to_str_with_ms(TS):
   """Converts a UNIX time.time float to a date time string with
