@@ -148,7 +148,7 @@ from pylab import date2num, num2date, ndarray
 
 import logging
 
-module_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 sec_per_day = 24.*60*60
 hr_to_rad = pi/12.
@@ -366,12 +366,12 @@ def datetime_to_UnixTime(t):
   Since t is a datetime object considered to be in the timezone of the
   user, the dst flag is changed to prevent dst conversion.
   """
-  module_logger.debug("datetime_to_UnixTime entered for %s", t)
+  logger.debug("datetime_to_UnixTime entered for %s", t)
   timetuple = t.timetuple()[:8]+(-1,) # -1 to compute DST
-  module_logger.debug("datetime_to_UnixTime: timetuple is %s", timetuple)
+  logger.debug("datetime_to_UnixTime: timetuple is %s", timetuple)
   # This treats the timetuple as local time.
   unixtime = T.mktime(timetuple)+1e-6*t.microsecond - T.altzone
-  module_logger.debug("datetime_to_UnixTime: UNIX time = %f", unixtime)
+  logger.debug("datetime_to_UnixTime: UNIX time = %f", unixtime)
   return unixtime
 
 def timetuple_to_datetime(timetuple):
@@ -404,14 +404,14 @@ def MPLtime_to_UnixTime(MPLtime):
   Converts an MPL time to a UNIX time stamp
   """
   # num2date returns a datetime object
-  module_logger.debug("MPLtime_to_UnixTime entered with %s", MPLtime)
+  logger.debug("MPLtime_to_UnixTime entered with %s", MPLtime)
   if type(MPLtime) == list or type(MPLtime) == ndarray:
     response = []
     for item in MPLtime:
       response.append(datetime_to_UnixTime(num2date(item), tz=UTC()))
   else:
     response = datetime_to_UnixTime(num2date(MPLtime, tz=UTC()))
-  module_logger.debug("MPLtime_to_UnixTime returned\n%s", response)
+  logger.debug("MPLtime_to_UnixTime returned\n%s", response)
   return response
  
 # conversions to and from VSR representations
