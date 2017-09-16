@@ -1,43 +1,78 @@
-#DatesTimes
+# DatesTimes
 
 Conversions between various date and time formats
 
-##Date and Time Formats
+## Date and Time Formats
 
-###VSR time tuples
+### VSR time tuples
 
 The are of the form
   `(YYYY,DDD,sssss)`
 where the latter is seconds since midnight.
 
-###VSR filename time strings
+### VSR filename time strings
 
 Used in the output files, these are text strings of the form
   `YYYY DDD ssssss`
 where the latter is seconds since midnight.
 
-###VSR script time stamps
+### VSR script time stamps
 
 used in filenames are of the form
   `DDD/HH:MM:SS`
 
-###ISO timestamps
+### ISO timestamps
 
 These are of the form
   `YYYYMMDDTHHMMSS` or `YYYY-MM-DDTHH:MM:SS`.
 
-###Python times
+### Python times
 
 take these forms
+*  **time.time** float
 ```
-  datetime.datetime object
-  time.time float
-  datetime tuple
-  datetime ordinal
-  matplotlib datetime float
+   In [29]: time.time()
+   Out[29]: 1501361397.04814
+```
+*  **time.struct_time**
+```
+   In [15]: time.gmtime(0)
+   Out[15]: time.struct_time(tm_year=1970, tm_mon=1, tm_mday=1,
+                               tm_hour=0,    tm_min=0, tm_sec=0,
+                               tm_wday=3,    tm_yday=1, tm_isdst=0)
+```
+*  **datetime.datetime** object
+```
+   In [16]: datetime.datetime.now()
+   Out[16]: datetime.datetime(2017, 7, 29, 13, 31, 54, 963632)
+```
+*  **datetime** timetuple
+```
+   In [32]: datetime.datetime(2, 1, 1, 0, 0, 0, 0).timetuple()
+   Out[32]: time.struct_time(tm_year=2, tm_mon=1, tm_mday=1,
+                               tm_hour=0, tm_min=0, tm_sec=0,
+                               tm_wday=1, tm_yday=1, tm_isdst=-1)
+```
+*  **datetime** ordinal
+```
+   In [24]: datetime.datetime.toordinal(datetime.datetime(1, 1, 31, 0, 0, 0, 0))
+   Out[24]: 31
+```
+*  **matplotlib datenum** float
+```
+   In [36]: matplotlib.dates.num2date(1)
+   Out[36]: datetime.datetime(1, 1, 1, 0, 0,
+                        tzinfo=<matplotlib.dates._UTC object at 0x7f66371f6550>)
+```
+In converting strings, this module converts a 2-digit year as nearest 4-digit
+year.
+```
+   In [55]: num2date(matplotlib.dates.datestr2num("Jan 1 99 00:00:00"))
+   Out[55]: datetime.datetime(1999, 1, 1, 0, 0,
+                        tzinfo=<matplotlib.dates._UTC object at 0x7f66371f6550>)
 ```
 
-###UNIX (System) Time
+### UNIX (System) Time
 
 Number of seconds since `1970/01/01 00:00:00 UT`. Example
 ```
@@ -47,7 +82,7 @@ Number of seconds since `1970/01/01 00:00:00 UT`. Example
                           tm_wday=3, tm_yday=1, tm_isdst=0)
 ```
 
-###Julian Date and Modified Julian Date
+### Julian Date and Modified Julian Date
 
 Julian Date is number of days since `-4713:11:24 12:00:00 UT`.
 ```
@@ -73,18 +108,18 @@ Example::
  Out[15]: 40587
 ```
 
-##IAU position based names
+## IAU position based names
 
 These take the forms::
   `Jhhmm+ddmm`, `Bhhmm+ddmm` and `Gddd.d+dd.d`
 
-##Classes
+## Classes
 
 Subclass `UTC(datetime.tzinfo)` defines UTC.
 
-##Functions
+## Functions
 
-###ISO times
+### ISO times
 
 Methods to convert to and from ISO times
 ```
@@ -92,7 +127,7 @@ Methods to convert to and from ISO times
   ISOtime2datetime(ISOtime)
 ```
 
-###UNIX Timestamp
+### UNIX Timestamp
 
 ```
   datetime_to_UnixTime(t)
@@ -102,7 +137,7 @@ Methods to convert to and from ISO times
   MPLtime_to_UnixTime(MPLtime)
   timestamp_to_str_with_ms(TS)
 ```
-###VSR Times
+### VSR Times
 
 To and from various VSR time formats
 ```
@@ -119,7 +154,7 @@ To and from various VSR time formats
   VSR_timestamp()
 ```
 
-###Time strings
+### Time strings
 
 Various functions to convert to and from time strings
 ```
@@ -132,7 +167,7 @@ Various functions to convert to and from time strings
   YYYYDDD_datecode(year, midfix, doy)
 ```
 
-###Date Conversions
+### Date Conversions
 ```
   calendar_date(year, doy)
   julian_date (year, doy)
@@ -140,7 +175,7 @@ Various functions to convert to and from time strings
   day_of_year (year, month, day)
 ```
 
-###Miscellaneous
+### Miscellaneous
 
 Various useful functions
 ```
