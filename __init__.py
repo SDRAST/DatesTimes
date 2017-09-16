@@ -137,12 +137,12 @@ Various useful functions::
   week_number(year,doy)
   MJD_to_UnixTime(MJD)
 """
-
-import time     as T
+import calendar
 import datetime as DT
 from math import pi
-from sys import argv
 import re
+from sys import argv
+import time     as T
 
 from pylab import date2num, num2date, ndarray
 
@@ -471,12 +471,14 @@ def VSR_script_time(doy,h,m,s):
 def VSR_script_time_to_timestamp(year,string):
   """
   Converts a VSR time string like 123/12:34:45 to a UNIX time stamp.
+  
+  Note that 'mktime' returns a local time from a UT timetuple
   """
   doystr,timestr = string.split('/')
   h,m,s = timestr.split(':')
   y,mn,d = calendar_date(year,int(doystr))
   t = DT.datetime(y,mn,d,int(h),int(m),int(s))
-  return T.mktime(t.timetuple())
+  return calendar.timegm(t.timetuple())
 
 def macro_log_time_to_UnixTime(year,timestr):
   """
