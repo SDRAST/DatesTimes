@@ -366,12 +366,9 @@ def datetime_to_UnixTime(t):
   Since t is a datetime object considered to be in the timezone of the
   user, the dst flag is changed to prevent dst conversion.
   """
-  logger.debug("datetime_to_UnixTime entered for %s", t)
   timetuple = t.timetuple()[:8]+(-1,) # -1 to compute DST
-  logger.debug("datetime_to_UnixTime: timetuple is %s", timetuple)
   # This treats the timetuple as local time.
   unixtime = T.mktime(timetuple)+1e-6*t.microsecond - T.altzone
-  logger.debug("datetime_to_UnixTime: UNIX time = %f", unixtime)
   return unixtime
 
 def timetuple_to_datetime(timetuple):
@@ -478,6 +475,20 @@ def VSR_script_time_to_timestamp(year,string):
   h,m,s = timestr.split(':')
   y,mn,d = calendar_date(year,int(doystr))
   t = DT.datetime(y,mn,d,int(h),int(m),int(s))
+  return calendar.timegm(t.timetuple())
+
+def WVSR_script_time_to_timestamp(yrdoystr,timestr):
+  """
+  Converts a VSR time string like 16/237 08:45:01 to a UNIX time stamp.
+  
+  Note that 'mktime' returns a local time (not UT) from a UT timetuple
+  """
+  yr, doy = yrdoystr.split('/')
+  year = 2000 + int(yr)
+  DOY = int(doy)
+  h,m,s = timestr.split(':')
+  y,mn,d = calendar_date(year, DOY)
+  t = DT.datetime(y, mn, d, int(h), int(m), int(s))
   return calendar.timegm(t.timetuple())
 
 def macro_log_time_to_UnixTime(year,timestr):
