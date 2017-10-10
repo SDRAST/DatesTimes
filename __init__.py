@@ -142,7 +142,7 @@ import datetime as DT
 from math import pi
 import re
 from sys import argv
-import time     as T
+import time as T
 
 from pylab import date2num, num2date, ndarray
 
