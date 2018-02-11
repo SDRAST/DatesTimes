@@ -363,13 +363,11 @@ def UnixTime_to_datetime(UnixTimeStamp):
 def datetime_to_UnixTime(t):
   """
   Converts a Python datetime object to a UNIX timestamp.
+  
   Since t is a datetime object considered to be in the timezone of the
   user, the dst flag is changed to prevent dst conversion.
   """
-  timetuple = t.timetuple()[:8]+(-1,) # -1 to compute DST
-  # This treats the timetuple as local time.
-  unixtime = T.mktime(timetuple)+1e-6*t.microsecond - T.altzone
-  return unixtime
+  return calendar.timegm(t.utctimetuple())
 
 def timetuple_to_datetime(timetuple):
   """
