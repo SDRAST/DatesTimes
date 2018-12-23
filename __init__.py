@@ -8,25 +8,30 @@ VSR time tuples
 The are of the form::
   (YYYY,DDD,sssss)
 where the latter is seconds since midnight.
-  
+
 VSR filename time strings
 -------------------------
 Used in the output files, these are text strings of the form::
   'YYYY DDD ssssss'
 where the latter is seconds since midnight.
-  
+
 VSR script time stamps
 ----------------------
 used in filenames are of the form::
   DDD/HH:MM:SS
-  
+
 ISO timestamps
 --------------
 These are of the form::
-  YYYYMMDDTHHMMSS or 
+  YYYYMMDDTHHMMSS or
   YYYY-MM-DDTHH:MM:SS.
+<<<<<<< HEAD
 We've extended this to include::{\scriptsize 
   YYYY-DDDTHH:MM(:SS) and 
+=======
+We've extended this to include::
+  YYYY-DDDTHH:MM(:SS) and
+>>>>>>> cf4efd74706857a9ad1b800a92cff75f41b21f3e
   YYYYDDDTHHMM.
 
 Python times
@@ -38,7 +43,7 @@ take these forms::
      1450729528.987735
   time.struct_time
      time.struct_time(tm_year=2015, tm_mon=12, tm_mday=21,
-                      tm_hour=20, m_min=23, tm_sec=18, 
+                      tm_hour=20, m_min=23, tm_sec=18,
                       tm_wday=0, tm_yday=355, tm_isdst=0)
   datetime ordinal (int)
      735951
@@ -55,7 +60,7 @@ Number of seconds since 1970/01/01 00:00:00 UT. Example::
 
 Julian Date and Modified Julian Date
 ------------------------------------
-Julian Date is number of days since -4713:11:24 12:00:00 UT
+Julian Date is number of days since -4713:11:24 DSN/WVSR/collector.py12:00:00 UT
 Example::
  In [11]: julian_date(-4713,328.5)
  Out[11]: 0.0
@@ -66,7 +71,7 @@ Modified Julian Date is::
  - Julian date - 2400000.5
  - number of days since 1858/11/17 00:00:00 UT.
  - 40587 + unixtime/(24*60*60)
- 
+
 Example::
  In [13]: julian_date(1858,day_of_year(1858,11,17))
  Out[13]: 2400000.5
@@ -95,11 +100,11 @@ To and from various VSR time formats::
   make_VSR_timestring()
   VSR_to_datetime(VSR_time_tuple)
   VSR_to_timetuple(VSR_tuple)
-  VSR_timestring_to_ISOtime(timestr)  
-  VSR_script_time(doy,h,m,s)  
-  VSR_script_time_to_timestamp(year,string)  
-  VSR_tuple_to_MPL(year,doy,seconds)  
-  VSR_tuple_to_datetime(year,doy,start_sec)  
+  VSR_timestring_to_ISOtime(timestr)
+  VSR_script_time(doy,h,m,s)
+  VSR_script_time_to_timestamp(year,string)
+  VSR_tuple_to_MPL(year,doy,seconds)
+  VSR_tuple_to_datetime(year,doy,start_sec)
   VSR_tuple_to_timestamp(year,doy,start_sec)
   VSR_timestamp()
 
@@ -142,9 +147,13 @@ import datetime as DT
 from math import pi
 import re
 from sys import argv
-import time     as T
+import time as T
 
+<<<<<<< HEAD
 #from pylab import num2date
+=======
+from matplotlib.dates import date2num, num2date
+>>>>>>> cf4efd74706857a9ad1b800a92cff75f41b21f3e
 from numpy import ndarray
 
 import logging
@@ -296,7 +305,7 @@ def leap_year (year):
 def ISOtime2datetime(ISOtime):
     """
     Converts an ISO string to a datetime object
-    
+
     Acceptable input formats are::
       YYYY-MM-DDTHH:MM:SS,
       YYYY-DDDTHH:MM(:SS),
@@ -335,7 +344,7 @@ def ISOtime2datetime(ISOtime):
         if len(ISOtime) == 12:
           return DT.datetime.strptime(ISOtime,'%Y%jT%H%M')
         elif len(ISOtime) == 14:
-          return DT.datetime.strptime(ISOtime,'%Y%jT%H%M%S')          
+          return DT.datetime.strptime(ISOtime,'%Y%jT%H%M%S')
         else:
           return DT.datetime.strptime(ISOtime,'%Y%jT%H%M%S.%f')
       else:
@@ -364,21 +373,16 @@ def UnixTime_to_datetime(UnixTimeStamp):
 def datetime_to_UnixTime(t):
   """
   Converts a Python datetime object to a UNIX timestamp.
+  
   Since t is a datetime object considered to be in the timezone of the
   user, the dst flag is changed to prevent dst conversion.
   """
-  logger.debug("datetime_to_UnixTime entered for %s", t)
-  timetuple = t.timetuple()[:8]+(-1,) # -1 to compute DST
-  logger.debug("datetime_to_UnixTime: timetuple is %s", timetuple)
-  # This treats the timetuple as local time.
-  unixtime = T.mktime(timetuple)+1e-6*t.microsecond - T.altzone
-  logger.debug("datetime_to_UnixTime: UNIX time = %f", unixtime)
-  return unixtime
+  return calendar.timegm(t.utctimetuple())
 
 def timetuple_to_datetime(timetuple):
   """
   Converts a timetuple (y,mo,d,h,mi,s) to a datetime object.
-  
+
   To convert a datetime object to a timetuple, simply invoke the object's
   timetuple() method.
   """
@@ -437,7 +441,7 @@ def MPLtime_to_UnixTime(MPLtime):
     UNIXdelta = MPLdelta*sec_per_day
     response = UNIXdelta - 62135596800.
   return response
-   
+
 # conversions to and from VSR representations
 
 def make_VSR_timestring():
@@ -448,7 +452,7 @@ def make_VSR_timestring():
   T = DT.datetime.utcnow()
   secs = T.hour*3600 + T.minute*60 + T.second - 1
   return T.strftime("%Y %j ")+("%5d" % secs)
-  
+
 def incr_VSR_timestring(timestr):
   """
   Increments a VSR timestamp.  It does not handle
@@ -478,7 +482,7 @@ def VSR_to_timetuple(VSR_tuple):
   Out[1]: (2010, 4, 11, 3, 25, 45, 6, 101, -1)"""
   t = VSR_to_datetime(VSR_tuple)
   return t.timetuple()
-  
+
 def VSR_timestring_to_ISOtime(timestr):
   """Formats a VSR time string as YYYYMMDDTHHMMSS. Example:
   In [2]: VSR_tuple_to_ISOtime((2010,101,12345))
@@ -495,13 +499,27 @@ def VSR_script_time(doy,h,m,s):
 def VSR_script_time_to_timestamp(year,string):
   """
   Converts a VSR time string like 123/12:34:45 to a UNIX time stamp.
-  
+
   Note that 'mktime' returns a local time from a UT timetuple
   """
   doystr,timestr = string.split('/')
   h,m,s = timestr.split(':')
   y,mn,d = calendar_date(year,int(doystr))
   t = DT.datetime(y,mn,d,int(h),int(m),int(s))
+  return calendar.timegm(t.timetuple())
+
+def WVSR_script_time_to_timestamp(yrdoystr,timestr):
+  """
+  Converts a VSR time string like 16/237 08:45:01 to a UNIX time stamp.
+
+  Note that 'mktime' returns a local time (not UT) from a UT timetuple
+  """
+  yr, doy = yrdoystr.split('/')
+  year = 2000 + int(yr)
+  DOY = int(doy)
+  h,m,s = timestr.split(':')
+  y,mn,d = calendar_date(year, DOY)
+  t = DT.datetime(y, mn, d, int(h), int(m), int(s))
   return calendar.timegm(t.timetuple())
 
 def macro_log_time_to_UnixTime(year,timestr):
@@ -543,7 +561,7 @@ def VSR_timestamp():
   Alias for make_VSR_timestring, for backwards compatibility
   """
   return make_VSR_timestring()
-  
+
 def incr_VSR_timestamp(timestr):
   """Alias for inc_VSR_timestring for backwards compatibility"""
   return incr_VSR_timestring(timestr)
@@ -571,17 +589,17 @@ def timetuple_to_HHMM(time):
 def YYYYDDD_datecode(year, midfix, doy):
   """
   Format the datecode pattern used in many log files.
-  
+
   The results consists of a year and doy separated by a string. 'year' is
   assumed to be a four digit integer but a two digit one should work.
   'doy' does NOT have leading zeros, that is, it's a normal integer.
-  
+
   @param year : four digit year
   @type  year : int
 
   @param midfix :
   @type  midfix : str
-  
+
   @param doy : day of year without leading zero(s)
   @type  doy : int
 
@@ -744,7 +762,7 @@ def format_ISO_time(year,doy,timestr):
   @return: str
   """
   return year + '-' + doy + 'T' + timestr[0:2] + ':' + timestr[2:4]
-  
+
 def get_current_week():
   year,daytime = now_string().strip().split('/')
   doy,timestr = daytime.split('-')
@@ -807,13 +825,13 @@ def MJD(*args):
 def seconds(timedelta, unit="sec"):
   """
   Computes the length of a datetime interval to specified units
-  
+
   @param timedelta : difference between two datetime values
   @type  timedelta : datetime.timedelta instance
-  
+
   @param unit : "sec" or "min" or "day"
   @type  unit : str
-  
+
   @return: float
   """
   days = timedelta.days
@@ -824,4 +842,3 @@ def seconds(timedelta, unit="sec"):
     return days*24*60 + secs/60.
   else:
     return days*24 + secs/3600.
-
