@@ -149,11 +149,6 @@ import re
 from sys import argv
 import time as T
 
-<<<<<<< HEAD
-#from pylab import num2date
-=======
-from matplotlib.dates import date2num, num2date
->>>>>>> cf4efd74706857a9ad1b800a92cff75f41b21f3e
 from numpy import ndarray
 
 import logging
