@@ -25,7 +25,7 @@ ISO timestamps
 These are of the form::
   YYYYMMDDTHHMMSS or 
   YYYY-MM-DDTHH:MM:SS.
-We've extended this to include::
+We've extended this to include::{\scriptsize 
   YYYY-DDDTHH:MM(:SS) and 
   YYYYDDDTHHMM.
 
@@ -104,7 +104,7 @@ To and from various VSR time formats::
   VSR_timestamp()
 
 Time strings
-------------
+------------MPLtime_to_UnixTime
 Various functions to convert to and from time strings::
   DDDMM_to_dec_deg(DDDMM)
   HHMM_to_timetuple(time_string)
@@ -144,7 +144,8 @@ import re
 from sys import argv
 import time     as T
 
-from pylab import date2num, num2date, ndarray
+#from pylab import num2date
+from numpy import ndarray
 
 import logging
 
@@ -389,31 +390,54 @@ def timetuple_to_datetime(timetuple):
 def UnixTime_to_MPL(UnixTime):
   """
   Converts a UNIX time stamp (seconds since the epoch) to matplotlib date/time.
+  
+  This an its inverse, MPLtime_to_UnixTime() are based on the linear relation
+  between these dates::
+      UnixTime       Date/Time      MPL date
+    ------------   --------------   --------
+               0   1970,1,1,0,0,0   719163.0
+    -62135596800      1,1,1,0,0,0        1.0
+  The slope of MPL date versus UNIX time is 1/(24*60*60)
   """
-  # date2num works on datetime objects
   if type(UnixTime) == list or type(UnixTime) == ndarray:
     response = []
     for item in UnixTime:
-      response.append(date2num(DT.datetime.fromtimestamp(item, tz=UTC())))
-    return response
+      UNIXdelta = item + 62135596800.
+      MPLdelta = UNIXdelta/sec_per_day
+      response.append(MPLdelta + 1)
   else:
-    return date2num(DT.datetime.fromtimestamp(UnixTime, tz=UTC()))
+    UNIXdelta = UnixTime + 62135596800
+    MPLdelta = UNIXdelta/sec_per_day
+    response = MPLdelta + 1
+  return response
 
+def num2date(MPLtime):
+  """
+  Replacement for matplotlib.dates function
+  """
+  MPLdelta = MPLtime - 1.
+  UNIXdelta = MPLdelta*sec_per_day
+  UNIXtime = UNIXdelta - 62135596800.
+  gmtimestruct = T.gmtime(UNIXtime)
+  return DT.datetime(*gmtimestruct[:6])
+  
 def MPLtime_to_UnixTime(MPLtime):
   """
   Converts an MPL time to a UNIX time stamp
   """
-  # num2date returns a datetime object
-  logger.debug("MPLtime_to_UnixTime entered with %s", MPLtime)
+  #logger.debug("MPLtime_to_UnixTime entered with %s", MPLtime)
   if type(MPLtime) == list or type(MPLtime) == ndarray:
     response = []
     for item in MPLtime:
-      response.append(datetime_to_UnixTime(num2date(item), tz=UTC()))
+      MPLdelta = item - 1.
+      UNIXdelta = MPLdelta*sec_per_day
+      response.append(UNIXdelta - 62135596800.)
   else:
-    response = datetime_to_UnixTime(num2date(MPLtime, tz=UTC()))
-  logger.debug("MPLtime_to_UnixTime returned\n%s", response)
+    MPLdelta = MPLtime - 1.
+    UNIXdelta = MPLdelta*sec_per_day
+    response = UNIXdelta - 62135596800.
   return response
- 
+   
 # conversions to and from VSR representations
 
 def make_VSR_timestring():
@@ -492,7 +516,8 @@ def VSR_tuple_to_MPL(year,doy,seconds):
   """Converts a VSR time tuple to a matplotlib date/time float."""
   yr,mn,dy = calendar_date(year,doy)
   # UT at midnight in matplotlib format
-  UT0 = date2num(DT.datetime(yr,mn,dy))
+  #UT0 = date2num(DT.datetime(yr,mn,dy))
+  UT0 = DT.datetime(yr,mn,dy).toordinal()
   time = UT0 + seconds/sec_per_day
   return time
 
