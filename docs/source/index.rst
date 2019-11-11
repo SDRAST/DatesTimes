@@ -3,13 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to DatesTimes's documentation!
-======================================
+DatesTimes
+==========
+
+.. automodapi:: DatesTimes
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   includeme
 
 
 Indices and tables

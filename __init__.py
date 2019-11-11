@@ -1,42 +1,47 @@
 # -*- coding: utf-8 -*-
-"""Supporting functions for Date and Time
+"""
+Supporting functions for Date and Time
 
 Date and Time Formats
 =====================
 VSR time tuples
 ---------------
 The are of the form::
+
   (YYYY,DDD,sssss)
+  
 where the latter is seconds since midnight.
 
 VSR filename time strings
 -------------------------
 Used in the output files, these are text strings of the form::
-  'YYYY DDD ssssss'
+
+  YYYY DDD ssssss
+  
 where the latter is seconds since midnight.
 
 VSR script time stamps
 ----------------------
 used in filenames are of the form::
+
   DDD/HH:MM:SS
 
 ISO timestamps
 --------------
 These are of the form::
-  YYYYMMDDTHHMMSS or
+
+  YYYYMMDDTHHMMSS      or
   YYYY-MM-DDTHH:MM:SS.
-<<<<<<< HEAD
-We've extended this to include::{\scriptsize 
-  YYYY-DDDTHH:MM(:SS) and 
-=======
+
 We've extended this to include::
+
   YYYY-DDDTHH:MM(:SS) and
->>>>>>> cf4efd74706857a9ad1b800a92cff75f41b21f3e
   YYYYDDDTHHMM.
 
 Python times
 ------------
 take these forms::
+
   datetime.datetime object
      datetime.datetime(2015, 12, 19, 10, 29, 29, 198776)
   time.time (float)
@@ -53,6 +58,7 @@ take these forms::
 UNIX (System) Time
 ------------------
 Number of seconds since 1970/01/01 00:00:00 UT. Example::
+
  In [10]: time.gmtime(0)
  Out[10]: time.struct_time(tm_year=1970, tm_mon=1, tm_mday=1,
                           tm_hour=0, tm_min=0, tm_sec=0,
@@ -62,6 +68,7 @@ Julian Date and Modified Julian Date
 ------------------------------------
 Julian Date is number of days since -4713:11:24 DSN/WVSR/collector.py12:00:00 UT
 Example::
+
  In [11]: julian_date(-4713,328.5)
  Out[11]: 0.0
  In [12]: calendar_date(-4713,328)
@@ -73,6 +80,7 @@ Modified Julian Date is::
  - 40587 + unixtime/(24*60*60)
 
 Example::
+
  In [13]: julian_date(1858,day_of_year(1858,11,17))
  Out[13]: 2400000.5
  In [14]: MJD(1858,11,17)
@@ -83,19 +91,27 @@ Example::
 IAU position based names
 ========================
 These take the forms::
-  Jhhmm+ddmm, Bhhmm+ddmm and Gddd.d+dd.d
 
-Methods
-=======
+  Jhhmm+ddmm
+  Bhhmm+ddmm
+  Gddd.d+dd.d
+
+Functions
+=========
+
 ISO times
 ---------
+
 Methods to convert to and from ISO times::
+
   format_ISO_time(year,doy,timestr)
   ISOtime2datetime(ISOtime):
 
 VSR Times
 ---------
+
 To and from various VSR time formats::
+
   incr_VSR_timestamp(timestr)  incr_VSR_timestring(timestr)
   make_VSR_timestring()
   VSR_to_datetime(VSR_time_tuple)
@@ -109,8 +125,10 @@ To and from various VSR time formats::
   VSR_timestamp()
 
 Time strings
-------------MPLtime_to_UnixTime
+------------
+
 Various functions to convert to and from time strings::
+
   DDDMM_to_dec_deg(DDDMM)
   HHMM_to_timetuple(time_string)
   HHMM_to_dec_deg(HHMM)
@@ -121,7 +139,9 @@ Various functions to convert to and from time strings::
 
 Miscellaneous
 -------------
+
 Various useful functions::
+
   datetime_to_UnixTime(t)
   deg_to_IAU_str(position,format="h")
   format_now()
@@ -141,6 +161,7 @@ Various useful functions::
   UnixTime_to_MPL(UnixTimeStamp)
   week_number(year,doy)
   MJD_to_UnixTime(MJD)
+  
 """
 import calendar
 import datetime as DT
@@ -175,7 +196,9 @@ class UTC(DT.tzinfo):
     return DT.timedelta(0)
 
 class ST(DT.tzinfo):
-  """This subclass of tzinfo defines standard time in the current timezone"""
+  """
+  This subclass of tzinfo defines standard time in the current timezone
+  """
   def tzname(self,dt):
     return "ST"
 
@@ -187,7 +210,8 @@ utc = UTC()
 # general conversions
 
 def calendar_date(year, doy):
-  """Calendar date from day of year
+  """
+  Calendar date from day of year
 
   @param year : int
 
@@ -220,6 +244,7 @@ def day_of_week (doy, year):
   @param year : int
 
   @return: int
+  
   1 - sunday,
   2 - monday,
   3 - tuesday,
@@ -392,10 +417,12 @@ def UnixTime_to_MPL(UnixTime):
   
   This an its inverse, MPLtime_to_UnixTime() are based on the linear relation
   between these dates::
+  
       UnixTime       Date/Time      MPL date
     ------------   --------------   --------
                0   1970,1,1,0,0,0   719163.0
     -62135596800      1,1,1,0,0,0        1.0
+    
   The slope of MPL date versus UNIX time is 1/(24*60*60)
   """
   if type(UnixTime) == list or type(UnixTime) == ndarray:
