@@ -687,7 +687,7 @@ def get_date():
   elif L > 2 and argv[1] == '-pylab':
     ses_date = argv[2]
   else:
-    ses_date = raw_input("Enter session date (YYYY-MM-DD): ")
+    ses_date = input("Enter session date (YYYY-MM-DD): ")
   ses_date,year,month,day,DOY = parse_date(ses_date)
   return ses_date,year,month,day,DOY
 
@@ -842,7 +842,7 @@ def MJD(*args):
     doy = day_of_year(year, month, day)
     return julian_date(year,doy) - 2400000.5
   else:
-    raise RuntimeError, "MJD requires 1, 2, or 3 arguments"
+    raise RuntimeError("MJD requires 1, 2, or 3 arguments")
 
 def seconds(timedelta, unit="sec"):
   """

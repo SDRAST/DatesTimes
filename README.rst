@@ -17,9 +17,9 @@ well as convenience routines.  The time formats converted include
   * formats used by the DSN VLBI Science Recorder series data file
   * miscellaneous other time strings
 
-The project `website <https://github.jpl.nasa.gov/RadioAstronomy/DatesTimes/>`_ 
+The project `website <https://github.com/SDRAST/DatesTimes/>`_ 
 contains the  Git repository from which the package can be cloned.
 
-Software `documentation <https://github.jpl.nasa.gov/pages/RadioAstronomy/DatesTimes/>`_
+Software `documentation <https://sdrast.github.io/DatesTimes/>`_
 is generated with Sphinx.
 
