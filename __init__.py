@@ -66,7 +66,7 @@ Number of seconds since 1970/01/01 00:00:00 UT. Example::
 
 Julian Date and Modified Julian Date
 ------------------------------------
-Julian Date is number of days since -4713:11:24 DSN/WVSR/collector.py12:00:00 UT
+Julian Date is number of days since -4713:11:24 12:00:00 UT
 Example::
 
  In [11]: julian_date(-4713,328.5)
@@ -166,14 +166,13 @@ Various useful functions::
 import calendar
 import datetime as DT
 from math import pi
+import numpy
 import re
 from sys import argv
 import time as T
 
-from numpy import ndarray
-
 import logging
-
+logging.basicConfig()
 logger = logging.getLogger(__name__)
 
 sec_per_day = 24.*60*60
@@ -234,7 +233,7 @@ def calendar_date(year, doy):
     day = doy + 2 - (month-1)*30-int((month+1)*0.61)
   return year,month,day
 
-def day_of_week (doy, year):
+def day_of_week(doy, year):
   """
   Numeric value for the day of week
 
@@ -254,7 +253,7 @@ def day_of_week (doy, year):
   7 - saturday,
   """
   day = julian_date( year, (doy + 0.5) ) + 2
-  return int((day - 7 * (int(day - 1) / 7)))
+  return int((day - 7 * (int(day - 1) // 7)))
 
 def julian_date (year, doy):
   """
@@ -274,8 +273,8 @@ def julian_date (year, doy):
     Julian Day (J.D) = number of days since noon on Jan. 1, 4713 BC
   """
   prev_year = year - 1
-  century = prev_year / 100
-  num_leaps = int(prev_year / 4) - century + int(century / 4)
+  century = prev_year // 100
+  num_leaps = int(prev_year // 4) - century + int(century // 4)
   jd = 1721425. + 365. * prev_year + num_leaps - 0.5 + doy
   return (jd)
 
@@ -425,7 +424,7 @@ def UnixTime_to_MPL(UnixTime):
     
   The slope of MPL date versus UNIX time is 1/(24*60*60)
   """
-  if type(UnixTime) == list or type(UnixTime) == ndarray:
+  if type(UnixTime) == list or type(UnixTime) == numpy.ndarray:
     response = []
     for item in UnixTime:
       UNIXdelta = item + 62135596800.
@@ -452,7 +451,7 @@ def MPLtime_to_UnixTime(MPLtime):
   Converts an MPL time to a UNIX time stamp
   """
   #logger.debug("MPLtime_to_UnixTime entered with %s", MPLtime)
-  if type(MPLtime) == list or type(MPLtime) == ndarray:
+  if type(MPLtime) == list or type(MPLtime) == numpy.ndarray:
     response = []
     for item in MPLtime:
       MPLdelta = item - 1.
@@ -487,16 +486,19 @@ def incr_VSR_timestring(timestr):
 def VSR_to_datetime(VSR_time_tuple):
   """
   Converts a VSR time tuple to a datetime object. Example::
-  >>> DateTime.VSR_to_datetime((2010,15,16212))
-  >>> datetime.datetime(2010, 1, 15, 4, 30, 12)
+  >>> DateTimes.VSR_to_datetime((2010,15,16212))
+  >>> datetimes.datetime(2010, 1, 15, 4, 30, 12)
   To create a VSR time tuple from a string use VSR_to_timetuple
   """
+  logger.debug("VSR_to_datetime: called for %s", VSR_time_tuple)
   (year,doy,seconds) = VSR_time_tuple
-  hrs = int(seconds)/3600
-  mins = (int(seconds)-3600*hrs)/60
+  hrs = int(seconds)//3600
+  mins = (int(seconds)-3600*hrs)//60
   secs = int(seconds) -3600*hrs - 60*mins
+  logger.debug("VSR_to_datetime: which is %d:%d:%f", hrs, mins, secs)
   t = calendar_date(year,doy)+(hrs,)+(mins,)+(secs,)
-  return DT.datetime(*t)
+  logger.debug("VSR_to_datetime: or %s", t)
+  return DT.datetime(*t).replace(tzinfo=DT.timezone.utc)
 
 def VSR_to_timetuple(VSR_tuple):
   """Converts a VSR time tuple to a Python time tuple.  Example

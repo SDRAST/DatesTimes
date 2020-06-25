@@ -1,0 +1,5 @@
+<map id="inheritancefc8c47df27" name="inheritancefc8c47df27">
+<area shape="rect" id="node1" href="api/DatesTimes.ST.html#DatesTimes.ST" target="_top" title="This subclass of tzinfo defines standard time in the current timezone" alt="" coords="125,5,197,31"/>
+<area shape="rect" id="node2" title="Abstract base class for time zone info objects." alt="" coords="5,31,77,56"/>
+<area shape="rect" id="node3" href="api/DatesTimes.UTC.html#DatesTimes.UTC" target="_top" title="This subclass of tzinfo defines UTC" alt="" coords="125,55,197,80"/>
+</map>
