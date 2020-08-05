@@ -276,7 +276,7 @@ def julian_date (year, doy):
   century = prev_year // 100
   num_leaps = int(prev_year // 4) - century + int(century // 4)
   jd = 1721425. + 365. * prev_year + num_leaps - 0.5 + doy
-  return (jd)
+  return jd
 
 def day_of_year (year, month, day):
   """
@@ -493,10 +493,12 @@ def VSR_to_datetime(VSR_time_tuple):
   logger.debug("VSR_to_datetime: called for %s", VSR_time_tuple)
   (year,doy,seconds) = VSR_time_tuple
   hrs = int(seconds)//3600
-  mins = (int(seconds)-3600*hrs)//60
-  secs = int(seconds) -3600*hrs - 60*mins
-  logger.debug("VSR_to_datetime: which is %d:%d:%f", hrs, mins, secs)
-  t = calendar_date(year,doy)+(hrs,)+(mins,)+(secs,)
+  mins = (int(seconds)- 3600*hrs)//60
+  secs = int(seconds) - 3600*hrs - 60*mins
+  microsec = int((seconds - 3600*hrs - 60*mins - secs)*1e6)
+  logger.debug("VSR_to_datetime: which is %d:%d:%d.%f",
+                                                      hrs, mins, secs, microsec)
+  t = calendar_date(year,doy)+(hrs,)+(mins,)+(secs,)+(microsec,)
   logger.debug("VSR_to_datetime: or %s", t)
   return DT.datetime(*t).replace(tzinfo=DT.timezone.utc)
 
