@@ -148,9 +148,11 @@ Various useful functions::
   get_current_week()
   get_date()
   logtime_to_timetuple(time_string)
+  logtime()
   macro_log_time_to_UnixTime(year,timestr)
   mpldate2doy(mpldate)
   MPLtime_to_UnixTime(MPLtime)
+  nowgmt()
   now_string()
   parse_date(ses_date)
   seconds(timedelta)
@@ -868,3 +870,22 @@ def seconds(timedelta, unit="sec"):
     return days*24*60 + secs/60.
   else:
     return days*24 + secs/3600.
+
+def nowgmt():
+  """
+  returns current UT as UNIX seconds
+  """
+  return T.time()+ T.altzone
+
+def logtime():
+  """
+  returns a formatted datetime object with the current UT
+  """
+  return DT.datetime.utcnow().strftime("%H:%M:%S.%f")[:-3]
+
+def logtimestamp():
+  """
+  returns a formatted datetime object with the curren year, DOY, and UT
+  """
+  return DT.datetime.utcnow().strftime("%Y-%j-%H:%M:%S")
+
